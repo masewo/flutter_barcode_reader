@@ -42,7 +42,9 @@ class BarcodeScanPlugin(val activity: Activity): MethodCallHandler,
     if (code == 100) {
       if (resultCode == Activity.RESULT_OK) {
         val barcode = data?.getStringExtra("SCAN_RESULT")
-        barcode?.let { this.result?.success(barcode) }
+        val barcodeFormat = data?.getStringExtra("BARCODE_FORMAT")
+        barcode?.let { this.result?.success(mapOf("barcode" to barcode,
+                "barcodeFormat" to barcodeFormat)) }
       } else {
         val errorCode = data?.getStringExtra("ERROR_CODE")
         this.result?.error(errorCode, null, null)

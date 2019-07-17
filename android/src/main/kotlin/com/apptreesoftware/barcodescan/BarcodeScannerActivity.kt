@@ -72,6 +72,7 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     override fun handleResult(result: Result?) {
         val intent = Intent()
         intent.putExtra("SCAN_RESULT", result.toString())
+        intent.putExtra("BARCODE_FORMAT", result?.barcodeFormat.toString())
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

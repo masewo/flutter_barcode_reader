@@ -10,12 +10,13 @@ import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import com.google.zxing.Result
+import com.yourcompany.barcodescan.R
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 
 class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
 
-    lateinit var scannerView: me.dm7.barcodescanner.zxing.ZXingScannerView
+    private lateinit var scannerView: ZXingScannerView
 
     companion object {
         val REQUEST_TAKE_PHOTO_CAMERA_PERMISSION = 100
@@ -36,11 +37,13 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (scannerView.flash) {
             val item = menu.add(0,
-                    TOGGLE_FLASH, 0, "Flash Off")
+                    TOGGLE_FLASH, TOGGLE_FLASH, "Flash Off")
+            item.setIcon(R.drawable.ic_flash_off)
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         } else {
             val item = menu.add(0,
-                    TOGGLE_FLASH, 0, "Flash On")
+                    TOGGLE_FLASH, TOGGLE_FLASH, "Flash On")
+            item.setIcon(R.drawable.ic_flash_on)
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         return super.onCreateOptionsMenu(menu)
@@ -73,14 +76,14 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
         val intent = Intent()
         intent.putExtra("SCAN_RESULT", result.toString())
         intent.putExtra("BARCODE_FORMAT", result?.barcodeFormat.toString())
-        setResult(Activity.RESULT_OK, intent)
+        setResult(RESULT_OK, intent)
         finish()
     }
 
     fun finishWithError(errorCode: String) {
         val intent = Intent()
         intent.putExtra("ERROR_CODE", errorCode)
-        setResult(Activity.RESULT_CANCELED, intent)
+        setResult(RESULT_CANCELED, intent)
         finish()
     }
 
@@ -122,7 +125,7 @@ object PermissionUtil {
      */
     fun verifyPermissions(grantResults: IntArray): Boolean {
         // At least one result must be checked.
-        if (grantResults.size < 1) {
+        if (grantResults.isEmpty()) {
             return false
         }
 

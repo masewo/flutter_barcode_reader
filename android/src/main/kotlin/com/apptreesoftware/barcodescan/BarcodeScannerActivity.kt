@@ -19,10 +19,12 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     private lateinit var scannerView: ZXingScannerView
 
     companion object {
-        val REQUEST_TAKE_PHOTO_CAMERA_PERMISSION = 100
-        val TOGGLE_FLASH = 200
-
+        const val REQUEST_TAKE_PHOTO_CAMERA_PERMISSION = 100
+        const val TOGGLE_CAMERA = 200
+        const val TOGGLE_FLASH = 300
     }
+
+    var cameraId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +48,29 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
             item.setIcon(R.drawable.ic_flash_on)
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
+        if (cameraId == 0) {
+            val item = menu.add(0,
+                    TOGGLE_CAMERA, TOGGLE_CAMERA, "Camera Front")
+            item.setIcon(R.drawable.ic_camera_front)
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        } else {
+            val item = menu.add(0,
+                    TOGGLE_CAMERA, TOGGLE_CAMERA, "Camera Rear")
+            item.setIcon(R.drawable.ic_camera_rear)
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == TOGGLE_FLASH) {
             scannerView.flash = !scannerView.flash
+            this.invalidateOptionsMenu()
+            return true
+        } else if (item.itemId == TOGGLE_CAMERA) {
+            cameraId = cameraId.xor(1)
+            scannerView.stopCamera()
+            scannerView.startCamera(cameraId)
             this.invalidateOptionsMenu()
             return true
         }
@@ -63,7 +82,7 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
         scannerView.setResultHandler(this)
         // start camera immediately if permission is already given
         if (!requestCameraAccessIfNecessary()) {
-            scannerView.startCamera()
+            scannerView.startCamera(cameraId)
         }
     }
 
@@ -103,7 +122,7 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
         when (requestCode) {
             REQUEST_TAKE_PHOTO_CAMERA_PERMISSION -> {
                 if (PermissionUtil.verifyPermissions(grantResults)) {
-                    scannerView.startCamera()
+                    scannerView.startCamera(cameraId)
                 } else {
                     finishWithError("PERMISSION_NOT_GRANTED")
                 }

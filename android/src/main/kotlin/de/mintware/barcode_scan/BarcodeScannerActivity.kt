@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import com.google.zxing.Result
-import com.yourcompany.barcodescan.R
+import de.mintware.barcodescan.R
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
 

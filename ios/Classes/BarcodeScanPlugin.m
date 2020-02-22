@@ -28,9 +28,10 @@
     scannerViewController.delegate = self;
     [self.hostViewController presentViewController:navigationController animated:NO completion:nil];
 }
-- (void)barcodeScannerViewController:(BarcodeScannerViewController *)controller didScanBarcodeWithResult:(NSString *)result {
+
+- (void)barcodeScannerViewController:(BarcodeScannerViewController *)controller didScanBarcodeWithResult:(AVMetadataMachineReadableCodeObject *)result {
     if (self.result) {
-        self.result(result);
+        self.result(@{ @"barcode" : result.stringValue, @"barcodeFormat" : result.type});
     }
 }
 

@@ -90,7 +90,7 @@
         [self.scanner stopScanning];
          AVMetadataMachineReadableCodeObject *code = codes.firstObject;
         if (code) {
-            [self.delegate barcodeScannerViewController:self didScanBarcodeWithResult:code.stringValue];
+            [self.delegate barcodeScannerViewController:self didScanBarcodeWithResult:code];
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     } error:&error];

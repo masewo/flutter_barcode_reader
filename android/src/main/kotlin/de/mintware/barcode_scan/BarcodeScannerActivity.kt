@@ -102,7 +102,8 @@ class BarcodeScannerActivity : Activity(), ZXingScannerView.ResultHandler {
     override fun handleResult(result: Result?) {
         val intent = Intent()
         intent.putExtra("SCAN_RESULT", result.toString())
-        intent.putExtra("BARCODE_FORMAT", result?.barcodeFormat.toString())
+        intent.putExtra("EXTENDED", if((result?.rawBytes?.size ?: 0)>1 && result!!.rawBytes[0].toInt()==105){ if(result!!.rawBytes[1].toInt()==102) "EAN_128" else "CODE_128"} else "")
+				intent.putExtra("BARCODE_FORMAT", result?.barcodeFormat.toString())
         setResult(RESULT_OK, intent)
         finish()
     }

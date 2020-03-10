@@ -15,6 +15,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String barcode = "";
+  String barcodeFormat = "";
+  String barcodeExtended = "";
 
   @override
   initState() {
@@ -32,11 +34,12 @@ class _MyAppState extends State<MyApp> {
             child: new Column(
               children: <Widget>[
                 new Container(
-                  child: new MaterialButton(
-                      onPressed: scan, child: new Text("Scan")),
+                  child: new MaterialButton(onPressed: scan, child: new Text("Scan")),
                   padding: const EdgeInsets.all(8.0),
                 ),
-                new Text(barcode),
+                Text(barcode),
+                Text(barcodeFormat),
+                Text(barcodeExtended),
               ],
             ),
           )),
@@ -46,7 +49,12 @@ class _MyAppState extends State<MyApp> {
   Future scan() async {
     try {
       Map barcode = await BarcodeScanner.scan();
-      setState(() => this.barcode = barcode['barcode']);
+      setState(() {
+        print('Keys: ${barcode.keys}');
+        this.barcodeFormat = barcode['barcodeFormat'];
+        this.barcodeExtended = barcode['extended'];
+        this.barcode = barcode['barcode'];
+      });
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -55,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       } else {
         setState(() => this.barcode = 'Unknown error: $e');
       }
-    } on FormatException{
+    } on FormatException {
       setState(() => this.barcode = 'null (User returned using the "back"-button before scanning anything. Result)');
     } catch (e) {
       setState(() => this.barcode = 'Unknown error: $e');

@@ -47,7 +47,7 @@ class BarcodeScanPlugin(private val registrar: Registrar) : MethodCallHandler, P
                 val barcode = data?.getStringExtra("SCAN_RESULT")
                 val barcodeFormat = data?.getStringExtra("BARCODE_FORMAT")
                 barcode?.let { this.result?.success(mapOf("barcode" to barcode,
-                        "barcodeFormat" to barcodeFormat)) }
+                        "barcodeFormat" to barcodeFormat, "extended" to data?.getStringExtra("EXTENDED") ) ) }
             } else {
                 val errorCode = data?.getStringExtra("ERROR_CODE")
                 this.result?.error(errorCode, null, null)

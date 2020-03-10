@@ -18,6 +18,7 @@ Android: https://github.com/dm77/barcodescanner
 - [x] Scan QR codes
 - [x] Control the flash while scanning
 - [x] Permission handling
+- [x] Added extended property to tell if this is a EAN128 vs CODE128
 
 ## Getting Started
 
